@@ -1,0 +1,54 @@
+name: Q6 Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "Q6.java"
+      - ".github/workflows/Q6.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  archive-q6:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile and test Q6.java
+        run: |
+          javac Q6.java
+          java Q6 4
+
+      - name: Create Q6 archive and diff files
+        run: |
+          PREV_FILE=$(ls -1 Q6_archive_*.txt 2>/dev/null | sort | tail -n 1 || true)
+
+          TS=$(date +"%d-%m-%Y-%H%M%S")
+          NEW_FILE="Q6_archive_${TS}.txt"
+          WC_OUT=$(wc -l -m Q6.java)
+
+          {
+            echo "Nom et prénom : Valentin LEROY"
+            echo "Taille Q6.java (lignes caracteres fichier) : $WC_OUT"
+            echo "Contenu de Q6.java :"
+            cat Q6.java
+          } > "$NEW_FILE"
+
+          if [ -n "$PREV_FILE" ] && [ -f "$PREV_FILE" ]; then
+            diff -u "$PREV_FILE" "$NEW_FILE" > "Q6_différences.txt" || true
+          else
+            echo "Première archive ($NEW_FILE) : pas d'archive précédente à comparer." > "Q6_différences.txt"
+          fi
+
+      - name: Commit and push Q6 files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Q6_archive_*.txt "Q6_différences.txt"
+          git commit -m "Q6: archive $NEW_FILE and diff" || exit 0
+          git pull --rebase origin main
+          git push
