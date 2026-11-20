@@ -1,0 +1,5 @@
+Nom et prénom : Valentin LEROY
+Date et heure d'exécution : 20/11/2026 15:19:21 UTC
+Taille de XYZ.txt : 28 octets
+Contenu de XYZ.txt :
+test voir si ca marche quoi
