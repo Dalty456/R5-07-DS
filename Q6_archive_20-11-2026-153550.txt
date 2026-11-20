@@ -1,0 +1,19 @@
+Nom et prénom : Valentin LEROY
+Taille Q6.java (lignes caracteres fichier) :  16 442 Q6.java
+Contenu de Q6.java :
+public class Q6 {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Veuillez fournir un entier N en ligne de commande.");
+            return;
+        }
+
+        int n = Integer.parseInt(args[0]);
+        for (int i = 1; i <= n; i++) {
+            for (int j = i; j >= 1; j--) {
+                System.out.print("x");
+            }
+            System.out.println();
+        }
+    }
+}
